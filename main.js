@@ -1,26 +1,5 @@
 var cities = [];
 
-const renderCities = () => {
-document.querySelector('.cities').replaceChildren();
-
-  for (let i = 0; i < cities.length; i++) {
-    const book = cities[i];
-
-    const template = `
-    <div class="book col-md-6">
-      <h4>${ city.title }</h4>
-      <div>Author: <strong>${ book.author }</strong></div>
-      <div>Pages: <strong>${ book.pageCount }</strong></div>
-      <div>ISBN: <strong>${ book.isbn }</strong></div>
-      <img src="${book.imageURL}" alt="">
-    </div>`;
-
-    document.querySelector('.cities').insertAdjacentHTML('beforeend', template);
-
-  }
-
-};
-
 const fetchCities = function(city) {
   const url = 'http://api.openweathermap.org/geo/1.0/direct?q=' + city + '&limit=5&appid=ad7a6c47620e290c667cee3d6af14631'
 
@@ -29,35 +8,43 @@ const fetchCities = function(city) {
     datatype: 'json',
   })
     .then(data => data.json())
-    .then(data => console.log(data))
+    .then(data => addCities(data))
 };
 
 const addCities = (data) => {
   cities = [];
 
-  for (let i = 0; i < data.items.length; i++) {
-    const cityData = data.items[i];
+  for (let i = 0; i < data.length; i++) {
+    const cityData = data[i];
 
     const city = {
-      title: cityData.volumeInfo.title || null,
-      author: cityData.volumeInfo.authors ? cityData.volumeInfo.authors[0] : null,
-      imageURL: cityData.volumeInfo.imageLinks ? cityData.volumeInfo.imageLinks.thumbnail : null,
-      pageCount: cityData.volumeInfo.pageCount || null,
-      isbn: cityData.volumeInfo.industryIdentifiers ?
-        cityData.volumeInfo.industryIdentifiers[0].identifier : null
+      name: cityData.name || null,
+      state: cityData.state || null,
+      country: cityData.country || null
     };
 
     cities.push(city);
   }
 
-  rendercities();
+  renderCities();
+};
+
+const renderCities = () => {
+document.querySelector('.city-options').replaceChildren();
+
+  for (let i = 0; i < cities.length; i++) {
+    const city  = cities[i];
+
+    const template = `<li class="city-option${i} list-group-item">${city.name}, ${city.state}, ${city.country}</li>`;
+
+    document.querySelector('.city-options').insertAdjacentHTML('beforeend', template);
+
+  }
 
 };
 
-document.querySelector('.search').addEventListener('click', function () {
-  const search = document.querySelector('#search-query').value;
+document.querySelector('.search-btn').addEventListener('click', function () {
+  const search = document.querySelector('.search-query').value;
 
   fetchCities(search);
-
-  document.querySelector('#search-query').value = '';
 });
