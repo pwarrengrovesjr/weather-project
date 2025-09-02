@@ -14,25 +14,31 @@
   <body>
     <div class="container">
       <div class="h1 text-center p-4 border-bottom">Weather Project</div>
-      <div class="row pt-5">
+      <div class="row pt-5" id="search-bar">
         <div class="col-9 city-search">
           <input
             type="search"
             class="form-control search-query"
             placeholder="Enter City Name"
             id="search-query"
+            list="city-options"
           />
+          <datalist id="city-options">
+            <!-- <option value="city"></option> -->
+          </datalist>
         </div>
         <div class="d-grid col-2">
-          <button type="button" class="btn btn-primary search-btn">
+          <button
+            type="button"
+            class="btn btn-primary search-btn"
+            data-bs-toggle="collapse"
+            data-bs-target="#cities-card"
+            aria-expanded="false"
+            aria-controls="cities-card"
+          >
             Search
           </button>
         </div>
-      </div>
-      <div class="card" style="width: 18rem">
-        <ul class="city-options list-group list-group-flush">
-          <!-- <li class="list-group-item">An item</li> -->
-        </ul>
       </div>
     </div>
     <script
@@ -41,5 +47,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="main.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
   </body>
 </html>

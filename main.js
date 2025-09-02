@@ -20,7 +20,9 @@ const addCities = (data) => {
     const city = {
       name: cityData.name || null,
       state: cityData.state || null,
-      country: cityData.country || null
+      country: cityData.country || null,
+      longitude: cityData.lon || null,
+      latitude: cityData.lat || null
     };
 
     cities.push(city);
@@ -30,20 +32,24 @@ const addCities = (data) => {
 };
 
 const renderCities = () => {
-document.querySelector('.city-options').replaceChildren();
+document.querySelector('#city-options').replaceChildren();
 
   for (let i = 0; i < cities.length; i++) {
     const city  = cities[i];
 
-    const template = `<li class="city-option${i} list-group-item">${city.name}, ${city.state}, ${city.country}</li>`;
+    let template = `<option value="${city.name}, ${city.state}, ${city.country}"></option>`;
 
-    document.querySelector('.city-options').insertAdjacentHTML('beforeend', template);
+    if (city.state === null) {
+      template = `<option value="${city.name}, ${city.country}"></option>`;
+    }
+
+    document.querySelector('#city-options').insertAdjacentHTML('beforeend', template);
 
   }
 
 };
 
-document.querySelector('.search-btn').addEventListener('click', function () {
+document.querySelector('.form-control').addEventListener('input', function () {
   const search = document.querySelector('.search-query').value;
 
   fetchCities(search);
