@@ -21,25 +21,17 @@
             class="form-control search-query"
             placeholder="Enter City Name"
             id="search-query"
-            list="city-options"
           />
-          <datalist id="city-options">
-            <!-- <option value="city"></option> -->
-          </datalist>
         </div>
         <div class="d-grid col-2">
-          <button
-            type="button"
-            class="btn btn-primary search-btn"
-            data-bs-toggle="collapse"
-            data-bs-target="#cities-card"
-            aria-expanded="false"
-            aria-controls="cities-card"
-          >
+          <button type="button" class="btn btn-primary search-btn">
             Search
           </button>
         </div>
       </div>
+      <div class="cities m-2 list-group" id="cities" style="width: 50%"></div>
+      <div class="current-weather"></div>
+      <div class="weather-forecast"></div>
     </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
