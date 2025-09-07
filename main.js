@@ -1,5 +1,4 @@
 var cities = [];
-var selectedCity = [];
 var currentWeather = [];
 var fiveDayForecast = [];
 
@@ -50,18 +49,8 @@ document.querySelector('.cities').replaceChildren();
 
     document.querySelector(`.city${i}`).addEventListener('click', function(){
       document.querySelector('.cities').replaceChildren()
-      selectedCity = [];
       
-      const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + city.lat + '&lon=' + city.lon + '&appid=ad7a6c47620e290c667cee3d6af14631';
-
-      fetch(url, {
-        method: 'GET',
-        datatype: 'json',
-      })
-        .then(data => data.json())
-        .then(data => console.log(data))
-
-      selectedCity.push(city)
+      fetchCurrentWeather(city)
     })
   }
 };
@@ -74,20 +63,36 @@ document.querySelector('.search-btn').addEventListener('click', function () {
   document.querySelector('.search-query').value = '';
 });
 
-// const addCurrentWeather = function(data) {
-//   currentWeather = [];
+const fetchCurrentWeather = function(city) {
+  const url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + city.lat + '&lon=' + city.lon + '&appid=ad7a6c47620e290c667cee3d6af14631';
 
-//   for (let i = 0; i < data.length; i++) {
-//     const weatherData = data[i];
+  fetch(url, {
+    method: 'GET',
+    datatype: 'json',
+  })
+    .then(data => data.json())
+    .then(data => addCurrentWeather(data))
+}
 
-//     const weather = {
-//       name: cityData.name || null,
-//       state: cityData.state || null,
-//       country: cityData.country || null,
-//       longitude: cityData.lon || null,
-//       latitude: cityData.lat || null
-//     };
+const addCurrentWeather = function(data) {
+  currentWeather = [];
 
-//     cities.push(city);
-//   }
-// }
+  const weather = {
+    place: data.name || null,
+    temp: Math.ceil(1.8 * (data.main.temp - 273.15) + 32) || null,
+    conditions: data.weather[0].main || null,
+    icon: data.weather[0].icon || null
+  }
+
+  currentWeather.push(weather)
+}
+
+const renderCurrentWeather = function() {
+  let template = `
+  <div class="col text-center">
+        <div class="temp display-2 pb-1"><strong>66</strong></div>
+        <div class="temp display-5 pb-1"><strong>Durham</strong></div>
+        <div class="temp display-6 pb-1"><strong>Clouds</strong></div>
+    </div>
+    <div class="col text-center"><img src="https://openweathermap.org/img/wn/04d@4x.png"></div>`
+}
