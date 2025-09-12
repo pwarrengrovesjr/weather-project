@@ -1,6 +1,7 @@
 var cities = [];
 var currentWeather = [];
-var fiveDayForecast = [];
+var forecast = [];
+var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const fetchCities = function(city) {
   const url = 'http://api.openweathermap.org/geo/1.0/direct?q=' + city + '&limit=5&appid=ad7a6c47620e290c667cee3d6af14631'
@@ -51,6 +52,7 @@ document.querySelector('.cities').replaceChildren();
       document.querySelector('.cities').replaceChildren()
       
       fetchCurrentWeather(city)
+      fetchForecast(city)
     })
   }
 };
@@ -85,14 +87,89 @@ const addCurrentWeather = function(data) {
   }
 
   currentWeather.push(weather)
+
+  renderCurrentWeather();
 }
 
 const renderCurrentWeather = function() {
+  document.querySelector('.current-weather').replaceChildren();
+
   let template = `
   <div class="col text-center">
-        <div class="temp display-2 pb-1"><strong>66</strong></div>
-        <div class="temp display-5 pb-1"><strong>Durham</strong></div>
-        <div class="temp display-6 pb-1"><strong>Clouds</strong></div>
-    </div>
-    <div class="col text-center"><img src="https://openweathermap.org/img/wn/04d@4x.png"></div>`
+      <div class="temp display-4 pb-1"><strong>${currentWeather[0].temp}°</strong></div>
+      <div class="temp display-6 pb-1"><strong>${currentWeather[0].place}</strong></div>
+      <div class="temp display-6 pb-1"><strong>${currentWeather[0].conditions}</strong></div>
+  </div>
+  <div class="col text-center"><img src="https://openweathermap.org/img/wn/${currentWeather[0].icon}@4x.png"></div>`;
+
+  document.querySelector('.current-weather').insertAdjacentHTML('beforeend', template);
+}
+
+const fetchForecast = function(city) {
+  const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + city.lat + '&lon=' + city.lon + '&appid=ad7a6c47620e290c667cee3d6af14631';
+
+  fetch(url, {
+    method: 'GET',
+    datatype: 'json',
+  })
+    .then(data => data.json())
+    .then(data => addForecast(data))
+}
+
+const addForecast = function(data) {
+  forecast = [];
+
+  for (let i = 0; i < data.list.length; i++) {
+    const element = data.list[i];
+
+    var weather = {
+      condition: element.weather[0].main || null,
+      temp: Math.ceil(1.8 * (element.main.temp - 273.15) + 32) || null,
+      icon: element.weather[0].icon || null,
+      day: dayNames[new Date(element.dt_txt).getDay()] || null
+    };
+
+    forecast.push(weather);
+    
+  }
+
+  renderForecast();
+}
+
+const renderForecast = function() {
+  document.querySelector('.forecast').replaceChildren();
+
+  let template = `
+  <div class="col border border-black text-center">
+    <div class="mt-2">${forecast[5].condition}</div>
+    <div>${forecast[5].temp}°</div>
+    <div class="my-2"><img src="https://openweathermap.org/img/wn/${forecast[5].icon}@2x.png"></div>
+    <div class="mb-2">${forecast[5].day}</div>
+  </div>
+  <div class="col border border-black text-center">
+    <div class="mt-2">${forecast[5 + 8].condition}</div>
+    <div>${forecast[5 + 8].temp}°</div>
+    <div class="my-2"><img src="https://openweathermap.org/img/wn/${forecast[5 + 8].icon}@2x.png"></div>
+    <div class="mb-2">${forecast[5 + 8].day}</div>
+  </div>
+  <div class="col border border-black text-center">
+    <div class="mt-2">${forecast[5 + 16].condition}</div>
+    <div>${forecast[5 + 16].temp}°</div>
+    <div class="my-2"><img src="https://openweathermap.org/img/wn/${forecast[5 + 16].icon}@2x.png"></div>
+    <div class="mb-2">${forecast[5 + 16].day}</div>
+  </div>
+  <div class="col border border-black text-center">
+    <div class="mt-2">${forecast[5 + 24].condition}</div>
+    <div>${forecast[5 + 24].temp}°</div>
+    <div class="my-2"><img src="https://openweathermap.org/img/wn/${forecast[5 + 24].icon}@2x.png"></div>
+    <div class="mb-2">${forecast[5 + 24].day}</div>
+  </div>
+  <div class="col border border-black text-center">
+    <div class="mt-2">${forecast[5 + 32].condition}</div>
+    <div>${forecast[5 + 32].temp}°</div>
+    <div class="my-2"><img src="https://openweathermap.org/img/wn/${forecast[5 + 32].icon}@2x.png"></div>
+    <div class="mb-2">${forecast[5 + 32].day}</div>
+  </div>`;
+
+  document.querySelector('.forecast').insertAdjacentHTML('beforeend', template);
 }
